@@ -66,7 +66,8 @@ use.cox.path <- function(x, y) {
 #' bar is displayed. If \code{trace.it=2}, some information about the fitting
 #' procedure is printed to the console as the model is being fitted.
 #' @param ... Other arguments passed from glmnet (not used right now).
-#'
+#' @param grouping vector of group names
+#' 
 #' @return An object of class "coxnet" and "glmnet".
 #' \item{a0}{Intercept value, \code{NULL} for "cox" family.}
 #' \item{beta}{A \code{nvars x length(lambda)} matrix of coefficients, stored in
@@ -126,7 +127,7 @@ cox.path <- function(x, y, weights=NULL, offset=NULL,
                      lambda=NULL, standardize=TRUE,
                      thresh=1e-10, exclude=NULL, penalty.factor=rep(1,nvars),
                      lower.limits=-Inf, upper.limits=Inf, maxit=100000,
-                     trace.it=0, ...) {
+                     trace.it=0, grouping = NULL,...) {
   ### Prepare all the generic arguments (mimicking top-level glmnet() call)
   if (alpha > 1) {
     warning("alpha > 1; set to 1")
@@ -317,7 +318,7 @@ cox.path <- function(x, y, weights=NULL, offset=NULL,
                    penalty.factor = vp, exclude = exclude,
                    lower.limits = lower.limits, upper.limits = upper.limits,
                    warm = fit, from.cox.path = TRUE, save.fit = TRUE,
-                   trace.it = trace.it)
+                   trace.it = trace.it, grouping = grouping)
     if (trace.it == 1) utils::setTxtProgressBar(pb, k)
     # if error code non-zero, a non-fatal error must have occurred
     # print warning, ignore this lambda value and return result
@@ -429,6 +430,7 @@ cox.path <- function(x, y, weights=NULL, offset=NULL,
 #' the console as the model is being fitted. Default is \code{trace.it=0}
 #' (no information printed). (\code{trace.it=1} not used for compatibility with
 #' \code{glmnet.path}.)
+#' @param grouping vector of group names
 #'
 #' @return An object with class "coxnet", "glmnetfit" and "glmnet". The list
 #' returned contains more keys than that of a "glmnet" object.
@@ -464,7 +466,7 @@ cox.fit <- function(x, y, weights, lambda, alpha = 1.0, offset = rep(0, nobs),
                     thresh = 1e-10, maxit = 100000,
                     penalty.factor = rep(1.0, nvars), exclude = c(),
                     lower.limits = -Inf, upper.limits = Inf, warm = NULL,
-                    from.cox.path = FALSE, save.fit = FALSE, trace.it = 0) {
+                    from.cox.path = FALSE, save.fit = FALSE, trace.it = 0, grouping = NULL) {
   this.call <- match.call()
   control <- glmnet.control()
 
@@ -543,7 +545,7 @@ cox.fit <- function(x, y, weights, lambda, alpha = 1.0, offset = rep(0, nobs),
   }
 
   start <- NULL     # current value for coefficients
-  obj_val_old <- cox_obj_function(y, eta, weights, lambda, alpha, coefold, vp)
+  obj_val_old <- cox_obj_function(y, eta, weights, lambda, alpha, coefold, vp, grouping)
   if (trace.it == 2) {
     cat("Warm Start Objective:", obj_val_old, fill = TRUE)
   }
@@ -575,7 +577,7 @@ cox.fit <- function(x, y, weights, lambda, alpha = 1.0, offset = rep(0, nobs),
     # update coefficients, eta, mu and obj_val
     start <- fit$warm_fit$a
     eta <- get_eta(x, start, 0) + offset
-    obj_val <- cox_obj_function(y, eta, weights, lambda, alpha, start, vp)
+    obj_val <- cox_obj_function(y, eta, weights, lambda, alpha, start, vp, grouping)
     if (trace.it == 2) cat("Iteration", iter, "Objective:", obj_val, fill = TRUE)
 
     boundary <- FALSE
@@ -595,7 +597,7 @@ cox.fit <- function(x, y, weights, lambda, alpha = 1.0, offset = rep(0, nobs),
         ii <- ii + 1
         start <- (start + coefold)/2
         eta <- get_eta(x, start, 0) + offset
-        obj_val <- cox_obj_function(y, eta, weights, lambda, alpha, start, vp)
+        obj_val <- cox_obj_function(y, eta, weights, lambda, alpha, start, vp, grouping)
         if (trace.it == 2) cat("Iteration", iter, " Halved step 1, Objective:",
                                obj_val, fill = TRUE)
       }

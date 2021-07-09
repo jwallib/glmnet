@@ -22,6 +22,7 @@ cox.path(
   upper.limits = Inf,
   maxit = 1e+05,
   trace.it = 0,
+  grouping = NULL,
   ...
 )
 }
@@ -64,6 +65,8 @@ Default value is \code{1e-10}.}
 \code{trace.it=0} (no information printed). If \code{trace.it=1}, a progress
 bar is displayed. If \code{trace.it=2}, some information about the fitting
 procedure is printed to the console as the model is being fitted.}
+
+\item{grouping}{vector of group names}
 
 \item{...}{Other arguments passed from glmnet (not used right now).}
 }

@@ -4,7 +4,16 @@
 \alias{cox_obj_function}
 \title{Elastic net objective function value for Cox regression model}
 \usage{
-cox_obj_function(y, pred, weights, lambda, alpha, coefficients, vp)
+cox_obj_function(
+  y,
+  pred,
+  weights,
+  lambda,
+  alpha,
+  coefficients,
+  vp,
+  grouping = NULL
+)
 }
 \arguments{
 \item{y}{Survival response variable, must be a \code{Surv} or
@@ -21,6 +30,8 @@ cox_obj_function(y, pred, weights, lambda, alpha, coefficients, vp)
 \item{coefficients}{The model's coefficients.}
 
 \item{vp}{Penalty factors for each of the coefficients.}
+
+\item{grouping}{vector of group names}
 }
 \description{
 Returns the elastic net objective function value for Cox regression model.

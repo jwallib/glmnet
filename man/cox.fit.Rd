@@ -21,7 +21,8 @@ cox.fit(
   warm = NULL,
   from.cox.path = FALSE,
   save.fit = FALSE,
-  trace.it = 0
+  trace.it = 0,
+  grouping = NULL
 )
 }
 \arguments{
@@ -74,6 +75,8 @@ Default is FALSE.This has implications for computation of the penalty factors.}
 the console as the model is being fitted. Default is \code{trace.it=0}
 (no information printed). (\code{trace.it=1} not used for compatibility with
 \code{glmnet.path}.)}
+
+\item{grouping}{vector of group names}
 }
 \value{
 An object with class "coxnet", "glmnetfit" and "glmnet". The list
