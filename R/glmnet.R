@@ -192,6 +192,8 @@
 #' useful for big models that take a long time to fit.
 #' @param ... Additional argument used in \code{relax.glmnet}. These include
 #' some of the original arguments to 'glmnet', and each must be named if used.
+#' @param grouping vector of group names
+#' 
 #' @return An object with S3 class \code{"glmnet","*" }, where \code{"*"} is
 #' \code{"elnet"}, \code{"lognet"}, \code{"multnet"}, \code{"fishnet"}
 #' (poisson), \code{"coxnet"} or \code{"mrelnet"} for the various types of
@@ -343,7 +345,33 @@
 #' system.time(fit2n <- glmnet(x, y))
 #'
 #' @export glmnet
-glmnet=function(x,y,family=c("gaussian","binomial","poisson","multinomial","cox","mgaussian"),weights=NULL,offset=NULL,alpha=1.0,nlambda=100,lambda.min.ratio=ifelse(nobs<nvars,1e-2,1e-4),lambda=NULL,standardize=TRUE,intercept=TRUE,thresh=1e-7,dfmax=nvars+1,pmax=min(dfmax*2+20,nvars),exclude=NULL,penalty.factor=rep(1,nvars),lower.limits=-Inf,upper.limits=Inf,maxit=100000,type.gaussian=ifelse(nvars<500,"covariance","naive"),type.logistic=c("Newton","modified.Newton"),standardize.response=FALSE,type.multinomial=c("ungrouped","grouped"),relax=FALSE,trace.it=0,...){
+glmnet=function(x,
+                y,
+                family=c("gaussian","binomial","poisson","multinomial","cox","mgaussian"),
+                weights=NULL,
+                offset=NULL,
+                alpha=1.0,
+                nlambda=100,
+                lambda.min.ratio=ifelse(nobs<nvars,1e-2,1e-4),
+                lambda=NULL,
+                standardize=TRUE,
+                intercept=TRUE,
+                thresh=1e-7,
+                dfmax=nvars+1,
+                pmax=min(dfmax*2+20,nvars),
+                exclude=NULL,
+                penalty.factor=rep(1,nvars),
+                lower.limits=-Inf,
+                upper.limits=Inf,
+                maxit=100000,
+                type.gaussian=ifelse(nvars<500,"covariance","naive"),
+                type.logistic=c("Newton","modified.Newton"),
+                standardize.response=FALSE,
+                type.multinomial=c("ungrouped","grouped"),
+                relax=FALSE,
+                trace.it=0,
+                groupings = NULL
+                ...){
 
     this.call=match.call()
 ### Need to do this first so defaults in call can be satisfied
@@ -373,7 +401,7 @@ glmnet=function(x,y,family=c("gaussian","binomial","poisson","multinomial","cox"
       # we should call the new cox.path()
       fit <- cox.path(x,y,weights,offset,alpha,nlambda,lambda.min.ratio,
                       lambda,standardize,thresh,exclude,penalty.factor,
-                      lower.limits,upper.limits,maxit,trace.it,...)
+                      lower.limits,upper.limits,maxit,trace.it,groupings = groupings,...)
       fit$call <- this.call
     } else {
       ### Must have been a call to old glmnet
