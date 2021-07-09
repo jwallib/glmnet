@@ -4,7 +4,7 @@
 \alias{pen_function}
 \title{Elastic net penalty value}
 \usage{
-pen_function(coefficients, alpha = 1, vp = 1)
+pen_function(coefficients, alpha = 1, vp = 1, grouping = NULL)
 }
 \arguments{
 \item{coefficients}{The model's coefficients (excluding intercept).}
@@ -12,6 +12,8 @@ pen_function(coefficients, alpha = 1, vp = 1)
 \item{alpha}{The elasticnet mixing parameter, with \eqn{0 \le \alpha \le 1}.}
 
 \item{vp}{Penalty factors for each of the coefficients.}
+
+\item{grouping}{vector of group names}
 }
 \description{
 Returns the elastic net penalty value without the \code{lambda} factor.

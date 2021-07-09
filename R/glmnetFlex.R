@@ -1112,7 +1112,16 @@ obj_function <- function(y, mu, weights, family,
 #' @param alpha The elasticnet mixing parameter, with \eqn{0 \le \alpha \le 1}.
 #' @param coefficients The model's coefficients (excluding intercept).
 #' @param vp Penalty factors for each of the coefficients.
-pen_function <- function(coefficients, alpha = 1.0, vp = 1.0) {
+#' @param grouping vector of group names
+pen_function <- function(coefficients, alpha = 1.0, vp = 1.0, grouping = NULL) {
+    if(!is.null(grouping)){
+        if(length(grouping) != length(vp) & length(vp)!=1) stop('Grouping and adaptive vectors must be the same length')
+        grouped_coefs = c()
+        for(g in unique(grouping)){
+            grouped_coefs = c(grouped_coefs,sqrt(sum(coefficients[which(grouping == g)])))
+        }
+        coefficients = grouped_coefs
+    }
     sum(vp * (alpha * abs(coefficients) + (1-alpha)/2 * coefficients^2))
 }
 

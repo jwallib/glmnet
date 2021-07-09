@@ -660,10 +660,11 @@ cox.fit <- function(x, y, weights, lambda, alpha = 1.0, offset = rep(0, nobs),
 #' @param alpha The elasticnet mixing parameter, with \eqn{0 \le \alpha \le 1}.
 #' @param coefficients The model's coefficients.
 #' @param vp Penalty factors for each of the coefficients.
+#' @param grouping vector of group names
 cox_obj_function <- function(y, pred, weights, lambda, alpha,
-                             coefficients, vp) {
+                             coefficients, vp, grouping = NULL) {
   coxnet.deviance(y = y, pred = pred, weights = weights, std.weights = FALSE) +
-    lambda * pen_function(coefficients, alpha, vp)
+    lambda * pen_function(coefficients, alpha, vp, grouping)
 }
 
 #' Get lambda max for Cox regression model
