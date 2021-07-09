@@ -370,7 +370,7 @@ glmnet=function(x,
                 type.multinomial=c("ungrouped","grouped"),
                 relax=FALSE,
                 trace.it=0,
-                groupings = NULL
+                groupings = NULL,
                 ...){
 
     this.call=match.call()

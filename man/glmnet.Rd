@@ -31,6 +31,7 @@ glmnet(
   type.multinomial = c("ungrouped", "grouped"),
   relax = FALSE,
   trace.it = 0,
+  groupings = NULL,
   ...
 )
 
@@ -190,6 +191,8 @@ appropriate subset of variables}
 \item{check.args}{Should \code{relax.glmnet} make sure that all the data
 dependent arguments used in creating 'fit' have been resupplied. Default is
 'TRUE'.}
+
+\item{grouping}{vector of group names}
 }
 \value{
 An object with S3 class \code{"glmnet","*" }, where \code{"*"} is
